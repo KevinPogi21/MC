@@ -21,7 +21,7 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = '2770d4fd598f5a792ebce414a891f412'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Kevs@localhost:5432/postgres'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:12345@localhost:5433/postgres'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'

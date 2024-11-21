@@ -43,6 +43,7 @@ class UserTourOperatorForm(FlaskForm):
     ])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message="Passwords must match.")])
     contact_number = StringField('Contact Number', validators=[DataRequired()])
+    municipal = StringField('Municipal', validators=[DataRequired()])
     submit = SubmitField('Create Account')
 
     def validate_email(self, email):

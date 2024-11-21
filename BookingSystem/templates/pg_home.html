@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PinoyGabay: Connecting travelers to local tour guide of BATOG</title>
+</head>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='pg-home.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<body>
+    
+        <!-- Header Section -->
+        <header class="header">
+            <a href="{{ url_for('main.pg_home') }}" class="logo">
+                <span style="color: #ff9f1c; font-weight: 800;">Pinoy</span><span style="font-weight: 800;">Gabay.</span>
+            </a>
+            <nav class="public-navbar">
+                <a href="{{ url_for('main.traveler_login') }}">Log In</a>
+                <a href="{{ url_for('main.traveler_register') }}">Sign Up</a>
+            </nav>
+        </header>
+
+          <!-- Hero Section -->
+          <section class="hero">
+              <div class="hero-box">
+                  <h1>“Discover Hidden Gems with Accredited Local
+                      Guides of <span style="color: #ff9f1c; font-style: italic;">Bolinao Association of Tour Guides.</span>”</h1>
+                  <p><span style="color: #ff9f1c;">Pinoy</span>Gabay: <span style="font-style: italic;">Connecting travelers with accredited tour guides for authentic
+                      cultural experiences across the Philippines</span></p>
+                    <div class="btn-box">
+                      <a href="#">Book Your Guide Now</a>
+                      <a href="#">Click to Learn More</a>
+                    </div>
+              </div>
+              <img src="{{ url_for('static', filename='BATOG.jpg') }}" alt="BATOG" class="hero-image">
+          </section>
+
+  <!-- Steps Section -->
+  <hr>
+
+
+  <section id="steps">
+  <div class="container-s">
+    <h2 class="section-title" style="color: #ff9f1c">
+      <span style="color: #1A535C;">Step-by-Step</span><br> Guide to Booking Your Tour Guide
+    </h2>
+    <ol class="steps-list">
+      <li class="step-item">
+        <div class="step-icon">1</div>
+        <div>
+          <h3>Register and Login as a traveler.</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-icon">2</div>
+        <div>
+          <h3>Select and choose your local tour guide</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-icon">3</div>
+        <div>
+          <h3>Customize and confirm your booking.</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-icon">4</div>
+        <div>
+          <h3>Additional Step.</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </li>
+      
+    </ol>
+  </div>
+</section>
+<hr>
+
+
+
+<section id="why-choose-pinoygabay" style="background-color: #1A535C;">
+    <div class="why-choose">
+      <h1>Why Choose <span style="color: #ff9f1c; font-weight: 900;">Pinoy</span>Gabay?</h1>
+    </div>
+    <ul class="core-benefits">
+      <li>
+        <i class="icon-local-expertise"></i>
+        <span>Local Expertise</span>
+        <p>Accredited local guides to ensure a deeper connection.</p>
+      </li>
+      <li>
+        <i class="icon-safe-secure"></i>
+        <span>Safe & Secure</span>
+        <p>DOT-certified guides for peace of mind.</p>
+      </li>
+      <li>
+        <i class="icon-customized-experiences"></i>
+        <span>Customized Experiences</span>
+        <p>Flexible itineraries tailored to your interests.</p>
+      </li>
+      <li>
+        <i class="icon-support-local"></i>
+        <span>Support Local</span>
+        <p>Contributing to local communities and economies.</p>
+      </li>
+    </ul>
+  </section>
+<hr>
+
+
+  <section id="about-bb" class="about-bb-section">
+    <div class="container-s">
+      <h1 class="title-bb"><span style="color: #1A535C;">Bolinao Association of Tour Guides</span><br>(BATOG)</h1>
+      <div class="img-pp">
+        <img src="{{ url_for('static', filename='BATOG.jpg') }}" alt="BATOG" class="bb-image">
+      </div>
+      <p style="font-style: italic; color: #1A535C">
+        Bolinao Association of Tour Guides (BATOG) is an organization composed of freelance tour guides in Bolinao who are trained and accredited by the Department of Tourism. Each community guide has a field of specialization such as river guiding, falls guiding, cave guiding, and Giant Clam guiding.
+      </p>
+    </div>
+  </section>
+
+
+  
+      <!-- About Us Section -->
+      <section class="about-us" id="about-us">
+        <h2>Our Story</h2>
+        <p>
+            At PinoyGabay, our mission is to connect travelers with local tour guides,
+            promote cultural immersion, and support local communities. We believe
+            in creating unforgettable experiences while giving back to the places
+            we visit.
+        </p>
+    
+        <div class="values">
+            <div class="value-card">
+                <h4>Sustainability</h4>
+                <p>We prioritize environmentally friendly practices to protect our planet.</p>
+            </div>
+            <div class="value-card">
+                <h4>Authenticity</h4>
+                <p>Our tours are designed to immerse you in the culture and traditions of each destination.</p>
+            </div>
+            <div class="value-card">
+                <h4>Community Support</h4>
+                <p>We aim to empower local communities through fair practices and collaboration.</p>
+            </div>
+        </div>
+    
+        <!-- Optional: Founders/Team Section -->
+        <div class="team">
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='s&d.webp') }}" alt="Founder 1">
+                <h4>Jerwin Troy Decena</h4>
+                <span>President</span>
+            </div>
+            <div class="team-member">
+                <img src="{{ url_for('static', filename='s&d.webp') }}" alt="Founder 2">
+                <h4>Kevin Fernando</h4>
+                <span>Vice-President</span>
+            </div>
+            <div class="team-member">
+              <img src="{{ url_for('static', filename='s&d.webp') }}" alt="Founder 2">
+              <h4>Joshua Catabay</h4>
+              <span>Secretary</span>
+          </div>
+        </div>
+    </section>
+    
+
+
+
+
+
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-container">
+        <!-- Quick Links Section -->
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Terms & Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+            </ul>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p>Email: <a href="mailto:support@pinoygabay.com">support@pinoygabay.com</a></p>
+            <p>Phone: +63 123 456 7890</p>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="footer-section">
+            <h4>Follow Us</h4>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+
+        <!-- Newsletter Subscription Section -->
+        <div class="footer-section">
+            <h4>Stay Updated</h4>
+            <p>Subscribe to our newsletter for updates and offers.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Your email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>CASSANO Grp. 2024. All Rights Reserved.</p>
+    </div>
+</footer>
+
+ 
+
+</body>
+</html>

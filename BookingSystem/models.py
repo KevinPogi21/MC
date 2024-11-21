@@ -10,6 +10,8 @@ from itsdangerous import URLSafeTimedSerializer as Serializer
 from datetime import datetime
 from enum import Enum
 
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -24,7 +26,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(15), nullable=False)
+    role = db.Column(db.String(15), nullable=False)  # admin, tour operator, tour guide
     last_name = db.Column(db.String(50))
     first_name = db.Column(db.String(50))
     profile_img = db.Column(db.String(225), default='default.jpg')
@@ -32,13 +34,13 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     confirmed = db.Column(db.Boolean, default=False)
-
+    tour = db.Column(db.Integer)
 
     # Relationships
-    tour_operator = db.relationship('TourOperator', backref='user', uselist=False, cascade="all, delete-orphan")
-    tour_guide = db.relationship('TourGuide', backref='user', uselist=False, cascade="all, delete-orphan")
-    reviews = db.relationship('ReviewsRating', backref='user', cascade="all, delete-orphan")
-    bookings = db.relationship('Booking', backref='user', cascade="all, delete-orphan")
+    tour_operator = db.relationship('TourOperator',backref='user',uselist=False,cascade="all, delete-orphan")
+    tour_guide = db.relationship('TourGuide',backref='user',uselist=False,cascade="all, delete-orphan")
+    reviews = db.relationship('ReviewsRating',backref='user', cascade="all, delete-orphan")
+    bookings = db.relationship('Booking',backref='user',cascade="all, delete-orphan")
     
     
     # @property
@@ -129,9 +131,12 @@ class TourOperator(db.Model, UserMixin):
         # {'schema': 'public'},
     )
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('Users.id', ondelete='CASCADE'),unique=True, nullable=False)
     municipal = db.Column(db.String(100))
     contact_num = db.Column(db.String(15))
+
+    # Relationships
+    tour_guides = db.relationship('TourGuide', backref='tour_operator', cascade="all, delete-orphan")
     
     @staticmethod
     def verify_reset_token(token, expires_sec=3600):
@@ -189,15 +194,15 @@ class TourGuide(db.Model, UserMixin):
         # {'schema': 'public'},
     )
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), unique=True, nullable=False)
-    toperator_id = db.Column(db.Integer, db.ForeignKey('Tour_Operator.id'), nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('Users.id', ondelete='CASCADE'), unique=True,nullable=False)
+    toperator_id = db.Column(db.Integer,db.ForeignKey('Tour_Operator.id', ondelete='CASCADE'), nullable=False)
     accredited_num = db.Column(db.String(50))
     bio = db.Column(db.Text)
     price = db.Column(db.Numeric(10, 2), default=1200)
     specialization = db.Column(db.String(255))
     contact_num = db.Column(db.String(15))
     active = db.Column(db.Boolean, default=False)
-
+    
     # Relationships
     characteristics = db.relationship('Characteristic', backref='tour_guide', cascade="all, delete-orphan")
     skills = db.relationship('Skill', backref='tour_guide', cascade="all, delete-orphan")
@@ -300,19 +305,62 @@ class Availability(db.Model):
 class TourPackage(db.Model):
     __tablename__ = 'TourPackage'
     __table_args__ = (
-        db.Index('idx_tour_package_name', 'name'),  # Index on name
-        # {'schema': 'public'},
+        db.Index('idx_tour_package_name', 'name'),
+        db.Index('idx_tour_package', 'toperator_id'), # Index on toperator_id
     )
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    toperator_id = db.Column(db.Integer, db.ForeignKey('Tour_Operator.id', ondelete='CASCADE'), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.Text)
-    inclusion = db.Column(db.Text)
-    exclusion = db.Column(db.Text)
-    itinerary = db.Column(db.Text)
-    estimated_price = db.Column(db.Numeric(10, 2))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    package_img = db.Column(db.String(255))
 
+    # Relationships
+    estimated_prices = db.relationship('EstimatedPrice', backref='tour_package', cascade="all, delete-orphan")
+    inclusions = db.relationship('Inclusion', backref='tour_package', cascade="all, delete-orphan")
+    exclusions = db.relationship('Exclusion', backref='tour_package', cascade="all, delete-orphan")
+    itineraries = db.relationship('Itinerary', backref='tour_package', cascade="all, delete-orphan")
+
+
+class EstimatedPrice(db.Model):
+    __tablename__ = 'Estimated_Price'
+    __table_args__ = (
+        db.Index('idx_estimated_price_package_id', 'package_id'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    package_id = db.Column(db.Integer, db.ForeignKey('TourPackage.id', ondelete="CASCADE"), nullable=False)
+    description = db.Column(db.String(100))
+    estimated_price = db.Column(db.Numeric(10, 2))
+
+
+class Inclusion(db.Model):
+    __tablename__ = 'Inclusion'
+    __table_args__ = (
+    db.Index('idx_inclusion_package_id', 'package_id'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    package_id = db.Column(db.Integer, db.ForeignKey('TourPackage.id', ondelete="CASCADE"), nullable=False)
+    inclusion = db.Column(db.String(100))
+
+
+class Exclusion(db.Model):
+    __tablename__ = 'Exclusion'
+    __table_args__ = (
+        db.Index('idx_exclusion_package_id', 'package_id'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    package_id = db.Column(db.Integer, db.ForeignKey('TourPackage.id', ondelete="CASCADE"), nullable=False)
+    exclusion = db.Column(db.String(100))
+
+
+class Itinerary(db.Model):
+    __tablename__ = 'Itinerary'
+    __table_args__ = (
+        db.Index('idx_itinerary_package_id', 'package_id'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    package_id = db.Column(db.Integer, db.ForeignKey('TourPackage.id', ondelete="CASCADE"), nullable=False)
+    title = db.Column(db.String(100))
+    subtitle = db.Column(db.String(100))
 
 class Booking(db.Model):
     __tablename__ = 'Booking'
@@ -347,7 +395,7 @@ class Notification(db.Model):
     )
     id = db.Column(db.Integer, primary_key=True)
     tguide_id = db.Column(db.Integer, db.ForeignKey('Tour_Guide.id'), nullable=False)
-    booking_id = db.Column(db.Integer, db.ForeignKey('Booking.id'), nullable=False)
+    booking_id = db.Column(db.Integer, db.ForeignKey('Booking.id', ondelete="CASCADE"), nullable=False)
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -362,7 +410,7 @@ class ReviewsRating(db.Model):
     )
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=True)
-    tour_guide_id = db.Column(db.Integer, db.ForeignKey('Tour_Guide.id'), nullable=False)
+    tour_guide_id = db.Column(db.Integer, db.ForeignKey('Tour_Guide.id', ondelete="CASCADE"), nullable=False)
     rating = db.Column(db.Numeric(2, 1))
     comment = db.Column(db.Text)
     datetime = db.Column(db.DateTime, default=datetime.utcnow)
@@ -375,8 +423,8 @@ class ReviewImages(db.Model):
         # {'schema': 'public'},
     )
     id = db.Column(db.Integer, primary_key=True)
-    rr_id = db.Column(db.Integer, db.ForeignKey('Reviews_Rating.id'), nullable=False)
-    img = db.Column(db.LargeBinary)
+    rr_id = db.Column(db.Integer, db.ForeignKey('Reviews_Rating.id', ondelete="CASCADE"), nullable=False)
+    img = db.Column(db.String(255))
 
 
 

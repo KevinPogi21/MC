@@ -4,7 +4,9 @@ from . import admin
 from werkzeug.security import generate_password_hash
 from BookingSystem import db, bcrypt
 from BookingSystem.Admin_Page.forms import UserTourOperatorForm
-from BookingSystem.models import User, TourOperator, send_confirmation_email
+from BookingSystem.models import User, TourOperator, send_confirmation_email, TourGuide
+from flask import request
+from sqlalchemy.orm import aliased
 
 # Create Tour Operator
 @admin.route('/create_operator', methods=['GET', 'POST'])
@@ -31,6 +33,7 @@ def create_operator():
             new_operator = TourOperator(
                 user_id=new_user.id,
                 contact_num=form.contact_number.data,
+                municipal=form.municipal.data,
             )
             db.session.add(new_operator)
             db.session.commit()
@@ -69,10 +72,41 @@ def admin_dashboard():
         return redirect(url_for('main.home'))  # Redirect to the main home page
 
     form = UserTourOperatorForm()  # Create an instance of the OperatorForm
-    
     tour_operators = TourOperator.query.all()
-    return render_template('admin_dashboard.html', title='Admin Dashboard', form=form, tour_operators=tour_operators)  # Render the dashboard with the form
+    role_filter = request.args.get('role', '')  # Default is no filter
 
+    if role_filter == 'tourguide':
+        # Create alias for the Users table to represent the Tour Operator
+        operator_user = aliased(User)
+        # Join TourGuide, User (for tour guide info), and User (for tour operator info)
+        users = db.session.query(
+            User.last_name.label('guide_last_name'),
+            User.first_name.label('guide_first_name'),
+            User.email,
+            TourGuide.active,
+            operator_user.first_name.label('operator_first_name')
+        ).join(
+            TourGuide, User.id == TourGuide.user_id
+        ).join(
+            TourOperator, TourGuide.toperator_id == TourOperator.id
+        ).join(
+            operator_user, TourOperator.user_id == operator_user.id  # Join with the aliased User for the operator
+        ).filter(
+            User.role == 'tourguide'  # Ensure we are filtering for 'tour guide'
+        ).all()
+
+    elif role_filter == 'touroperator':
+        # Fetch tour operators with municipal information
+        users = db.session.query(User, TourOperator.municipal).join(
+            TourOperator, User.id == TourOperator.user_id
+        ).filter(User.role == 'touroperator').all()
+
+    elif role_filter and role_filter in ['traveler']:
+        users = User.query.filter(User.role == role_filter).all()
+    else:
+        users = User.query.filter(User.role != 'admin').all()
+
+    return render_template('admin_dashboard.html', title='Admin Dashboard', form=form, tour_operators=tour_operators, users=users, role_filter=role_filter)  # Render the dashboard with the form
 
 @admin.route('/logout')
 @login_required  # Ensure user is logged in before logging out

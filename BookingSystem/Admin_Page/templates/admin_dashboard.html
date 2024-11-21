@@ -40,8 +40,8 @@
             </div>
 
             <div class="tab-pane" id="tour-management">
-              <h2>Tour Guide & Operator Management</h2>
-              <p>Monitor and manage tours and operators here.</p>
+              <h2>Operator Management</h2>
+              <p>Monitor and Manage Tours and Operators here.</p>
             
                         <!-- Modal Trigger Button -->
                         <button class="primary-btn" id="add-operator-btn">Add Tour Operator</button>
@@ -69,63 +69,82 @@
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.name(class="form-control") }}
+                                    {{ form.name(class="form-control" ,placeholder="Enter Operator Name") }}
                                 {% endif %}
                               </div>
+
+                              <div class="input-container">
+                                <label for="name">Municipal</label>
+                                {% if form.municipal.errors %}
+                                  {{ form.municipal(class="form-control form-control-lg is-invalid") }}
+                                  <div class="invalid-feedback">
+                                        {% for error in form.municipal.errors %}
+                                            <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.municipal(class="form-control",placeholder="Enter Municipal") }}
+                                {% endif %}
+                              </div>
+                              
                               
                               <div class="input-container">
                                 <label for="email">Email</label>
                                 {% if form.email.errors %}
-                                  {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                  {{ form.email(class="form-control form-control-lg is-invalid"
+                                  ,placeholder="Enter Email") }}
                                   <div class="invalid-feedback">
                                         {% for error in form.email.errors %}
                                             <span>{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.email(class="form-control") }}
+                                    {{ form.email(class="form-control",placeholder="Enter Email") }}
                                 {% endif %}
                               </div>
             
                               <div class="input-container">
                                 <label for="password">Password</label>
                                 {% if form.password.errors %}
-                                  {{ form.password(class="form-control form-control-lg is-invalid") }}
+                                  {{ form.password(class="form-control form-control-lg is-invalid"
+                                  ,placeholder="Enter Password") }}
                                   <div class="invalid-feedback">
                                         {% for error in form.password.errors %}
                                             <span>{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.password(class="form-control") }}
+                                    {{ form.password(class="form-control",placeholder="Enter Password") }}
                                 {% endif %}
                               </div>
             
                               <div class="input-container">
                                 <label for="confirm_password">Confirm Password</label>
                                 {% if form.confirm_password.errors %}
-                                  {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                                  {{ form.confirm_password(class="form-control form-control-lg is-invalid"
+                                  ,placeholder="Confirm Password") }}
                                   <div class="invalid-feedback">
                                         {% for error in form.confirm_password.errors %}
                                             <span>{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.confirm_password(class="form-control") }}
+                                    {{ form.confirm_password(class="form-control",placeholder="Confirm Password") }}
                                 {% endif %}
                               </div>
 
                               <div class="input-container">
                                 <label for="contact_number">Contact Number</label>
                                 {% if form.contact_number.errors %}
-                                  {{ form.contact_number(class="form-control form-control-lg is-invalid") }}
+                                  {{ form.contact_number(class="form-control form-control-lg is-invalid"
+                                  ,placeholder="Enter Contact Number") }}
                                   <div class="invalid-feedback">
                                         {% for error in form.contact_number.errors %}
                                             <span>{{ error }}</span>
                                         {% endfor %}
                                     </div>
                                 {% else %}
-                                    {{ form.contact_number(class="form-control") }}
+                                    {{ form.contact_number(class="form-control",placeholder="Enter Contact Number") }}
                                 {% endif %}
                             </div>
                             
@@ -143,7 +162,7 @@
                                     </div>
                                       <div class="guide-info">
                                           <h3 class="guide-name">{{ operator.user.first_name }}</h3>
-                                          <h4 class="guide-name">{{ operator.first_name }}</h4>
+                                          <h4 class="guide-name">{{ operator.municipal }}</h4>
                                           <button class="view-btn" onclick="redirectToProfile()">View Profile</button>
                                       </div>
                                   </div>
@@ -151,11 +170,76 @@
                                   <p>No Tour Operators</p>
                               {% endfor %}
                       </div>
-
-
                         </div>
+                        <br>
+                        <hr>
+                        <br>
+                        <h1 class="page-title">User Management</h1>
+                        <div class="filter-container">
+                          <form method="get" action="{{ url_for('admin.admin_dashboard') }}">
+                              <label for="role">Filter by Role:</label>
+                              <select name="role" id="role" onchange="this.form.submit()">
+                                  <option value="" {% if not role_filter %}selected{% endif %}>All</option>
+                                  <option value="touroperator" {% if role_filter == 'tour operator' %}selected{% endif %}>Tour Operators</option>
+                                  <option value="tourguide" {% if role_filter == 'tour guide' %}selected{% endif %}>Tour Guides</option>
+                                  <option value="traveler" {% if role_filter == 'traveler' %}selected{% endif %}>Travelers</option>
+                              </select>
+                          </form>
                       </div>
-      
+                  
+                      <table>
+                          <thead>
+                              <tr>
+                                  <th>Name</th>
+                                  <th>Email</th>
+                                  {% if role_filter == 'tourguide' %}
+                                  <th>Tour Operator</th>
+                                  <th>Active</th>
+                                  {% endif %}
+                                  {% if role_filter == 'touroperator' %}
+                                  <th>Municipal</th>
+                                  {% endif %}
+                                  {% if role_filter == 'traveler' %}
+                                  <th>Nationality</th>
+                                  {% endif %}
+                                  <th>Role</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% if users %}
+                                  {% for user in users %}
+                                  <tr>
+                                      {% if role_filter == 'tourguide' %}
+                                      <td>{{ user.guide_last_name }} {{ user.guide_first_name }}</td>
+                                      <td>{{ user.email }}</td>
+                                      <td>{{ user.operator_first_name }}</td>
+                                      <td>{{ user.active }}</td>
+                                      <td>Tour Guide</td>
+                                      {% elif role_filter == 'touroperator' %}
+                                      <td> {{ user[0].first_name }}</td>
+                                      <td>{{ user[0].email }}</td>
+                                      <td>{{ user[1] }}</td> <!-- Municipal -->
+                                      <td>Tour Operator</td>
+                                      {% elif role_filter == 'traveler' %}
+                                      <td>{{ user.last_name }} {{ user.first_name }}</td>
+                                      <td>{{ user.email }}</td>
+                                      <td>{{ user.nationality }}</td>  <!-- Display nationality if role is traveler -->
+                                      <td>Traveler</td>
+                                      {% else %}
+                                      <td>{{ user.last_name }} {{ user.first_name }}</td>
+                                      <td>{{ user.email }}</td>
+                                      <td>{{ user.role }}</td>
+                                      {% endif %}
+                                  </tr>
+                                  {% endfor %}
+                              {% else %}
+                                  <tr>
+                                      <td colspan="5" style="text-align: center; padding: 12px;">No Users found.</td>
+                                  </tr>
+                              {% endif %}
+                          </tbody>
+                      </table>
+                      </div>
             <div class="tab-pane" id="admin-profile">
               <h2>Admin Profile</h2>
               <div class="input-group">

@@ -254,16 +254,22 @@ input:focus {
   font-size: 24px;
   color: #2b2d42;
 }
-/* Tour Guide List Container */
+
+/* Tour Operator List Container */
 .tour-guide-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); */
+  display: flex;
+  justify-content: center;
   gap: 15px;
   margin-top: 20px;
+  align-items: center;
+  /* background: red; */
 }
-/* Tour Guide Card Styling */
+
+/* Tour Operator Card Styling */
 .tour-guide-card {
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -272,10 +278,14 @@ input:focus {
   align-items: center;
   padding: 15px;
   transition: transform 0.2s ease;
+  max-width: 200px;
+  /* justify-content: center; */
 }
+
 .tour-guide-card:hover {
   transform: translateY(-3px);
 }
+
 /* Profile Picture Styling */
 .profile-picture {
   width: 100%;
@@ -284,41 +294,29 @@ input:focus {
   overflow: hidden;
   margin-bottom: 10px;
 }
+
 .profile-picture img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-/* Guide Info Styling */
+
+/* Tour Operator Info Styling */
 .guide-info {
   text-align: center;
   width: 100%;
 }
+
 .guide-name {
   font-size: 16px;
   color: #2b2d42;
   margin-bottom: 6px;
 }
-.price {
-  font-size: 14px;
-  color: #4ecdc4;
-  margin-bottom: 6px;
-}
-.ratings {
-  font-size: 12px;
-  color: #ff9f1c;
-  margin-bottom: 6px;
-}
-.status {
-  font-size: 12px;
-  margin-bottom: 10px;
-}
-.status.active {
-  color: #4ecdc4;
-}
+
 .status.inactive {
   color: #e63946;
 }
+
 /* View Button */
 .view-btn {
   background-color: #4ecdc4;
@@ -332,12 +330,43 @@ input:focus {
   width: 100%;
   text-align: center;
 }
+
 .view-btn:hover {
   background-color: #38bfb0;
 }
 
 
 
+/* USER MANAGEMENT */
+
+
+.filter-container {
+  width: 80%;
+  margin: 20px auto;
+  text-align: right;
+}
+
+.filter-container select {
+  padding: 8px;
+  font-size: 16px;
+}
+
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  font-size: 18px;
+  text-align: left;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+thead {
+  background-color: #f2f2f2;
+}
 
 
 

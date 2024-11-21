@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, session, jsonify, current_app
+from flask import abort, render_template, redirect, url_for, flash, request, session, jsonify, current_app
 from flask_login import login_required, current_user, logout_user, login_user
 from BookingSystem.TourOperator_Page import touroperator
 from . import tourguide  
@@ -655,6 +655,3 @@ def get_booking_details(booking_id):
         "special_notes": booking.special_notes or "N/A"
     }
     return jsonify(booking_data)
-
-
-
